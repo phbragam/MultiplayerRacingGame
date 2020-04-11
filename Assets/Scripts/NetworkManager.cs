@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -30,6 +31,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Text RoomInfoText;
     public GameObject PlayerListPrefab;
     public GameObject PlayerListContent;
+    public GameObject StartGameButton;
 
     [Header("Join Random Room Panel")]
     public GameObject JoinRandomRoomUIPanel;
@@ -179,9 +181,19 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 playerListGameObject.transform.localScale = Vector3.one;
                 playerListGameObject.GetComponent<PlayerListEntryInitializer>().Initialize(player.ActorNumber, player.NickName);
 
+                object isPlayerReady;
+
+                // If the player has this  PlayerReady  custom property, this code will return true
+                if (player.CustomProperties.TryGetValue(MultiplayerRacingGame.PLAYER_READY, out isPlayerReady))
+                {
+                    playerListGameObject.GetComponent<PlayerListEntryInitializer>().SetPlayerReady((bool)isPlayerReady);
+                }
+
                 playerListGameObjects.Add(player.ActorNumber, playerListGameObject);
             }
         }
+
+        StartGameButton.SetActive(false);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -231,6 +243,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         playerListGameObject.GetComponent<PlayerListEntryInitializer>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
 
         playerListGameObjects.Add(newPlayer.ActorNumber, playerListGameObject);
+
+        StartGameButton.SetActive(CheckPlayersReady());
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -246,6 +260,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         // Destroying game object from player who left in playerListGameObject
         Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
         playerListGameObjects.Remove(otherPlayer.ActorNumber);
+
+        StartGameButton.SetActive(CheckPlayersReady());
     }
 
     public override void OnLeftRoom()
@@ -259,6 +275,30 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
         playerListGameObjects.Clear();
         playerListGameObjects = null;
+    }
+
+    // Called when custom player-properties are changed. Player and the changed properties are passed as object
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        GameObject playerListGameObject;
+        if (playerListGameObjects.TryGetValue(targetPlayer.ActorNumber, out playerListGameObject))
+        {
+            object isPlayerReady;
+            // Set player properties updates to be visible online
+            if (changedProps.TryGetValue(MultiplayerRacingGame.PLAYER_READY, out isPlayerReady))
+            {
+                playerListGameObject.GetComponent<PlayerListEntryInitializer>().SetPlayerReady((bool)isPlayerReady);
+            }
+        }
+        StartGameButton.SetActive(CheckPlayersReady());
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        if(PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
+        {
+            StartGameButton.SetActive(CheckPlayersReady());
+        }
     }
 
     #endregion
@@ -279,6 +319,34 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public void SetGameMode(string _gameMode)
     {
         GameMode = _gameMode;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private bool CheckPlayersReady()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return false;
+        }
+        foreach(Player player in PhotonNetwork.PlayerList)
+        {
+            object isPlayerReady;
+            if(player.CustomProperties.TryGetValue(MultiplayerRacingGame.PLAYER_READY, out isPlayerReady))
+            {
+                if(!(bool)isPlayerReady)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     #endregion
