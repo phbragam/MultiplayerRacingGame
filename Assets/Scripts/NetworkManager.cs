@@ -32,6 +32,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public GameObject PlayerListPrefab;
     public GameObject PlayerListContent;
     public GameObject StartGameButton;
+    public Text GameModeText;
+    public Image PanelBackground;
+    public Sprite RacingBackground;
+    public Sprite DeathRaceBackground;
 
     [Header("Join Random Room Panel")]
     public GameObject JoinRandomRoomUIPanel;
@@ -43,6 +47,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     void Start()
     {
         ActivatePanel(LoginUIPanel.name);
+
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     // Update is called once per frame
@@ -126,6 +132,23 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
+    public void OnStartGameButtonClicked()
+    {
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
+        {
+            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsValue("rc"))
+            {
+                // Racing game mode
+                PhotonNetwork.LoadLevel("RacingScene");
+            }
+            else if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsValue("dr"))
+            {
+                // Death race game mode
+                PhotonNetwork.LoadLevel("DeathRaceScene");
+            }
+        }
+    }
+
     #endregion
 
     #region Photon Callbacks
@@ -167,7 +190,20 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 + " / "
                 + PhotonNetwork.CurrentRoom.MaxPlayers;
 
-            // This is because we dont need to INSTANTIATE this list again when leave room and jointo another
+            if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsValue("rc"))
+            {
+                // Racing game mode
+                GameModeText.text = "LET'S RACE!";
+                PanelBackground.sprite = RacingBackground;
+            }
+            else if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsValue("dr"))
+            {
+                // Death race game mode
+                GameModeText.text = "DEATH RACE!";
+                PanelBackground.sprite = DeathRaceBackground;
+            }
+
+            // This is because we dont need to INSTANTIATE this list again when leave room and join to another room
             if(playerListGameObjects == null)
             {
                 playerListGameObjects = new Dictionary<int, GameObject>();
