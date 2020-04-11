@@ -27,10 +27,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     [Header("Inside Room Panel")]
     public GameObject InsideRoomUIPanel;
+    public Text RoomInfoText;
+    public GameObject PlayerListPrefab;
+    public GameObject PlayerListContent;
 
     [Header("Join Random Room Panel")]
     public GameObject JoinRandomRoomUIPanel;
 
+    private Dictionary<int, GameObject> playerListGameObjects;
     #region Unity Methods
 
     // Start is called before the first frame update
@@ -115,6 +119,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         ActivatePanel(GameOptionsUIPanel.name);
     }
 
+    public void OnLeaveGameButtonClicked()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
     #endregion
 
     #region Photon Callbacks
@@ -145,12 +154,32 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             + PhotonNetwork.CurrentRoom.PlayerCount);
 
         ActivatePanel(InsideRoomUIPanel.name);
+
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
         {
-            object gameModeName;
-            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gm", out gameModeName))
+            RoomInfoText.text = "Room name: " 
+                + PhotonNetwork.CurrentRoom.Name
+                + " "
+                + " Players/Max.Players: "
+                + PhotonNetwork.CurrentRoom.PlayerCount
+                + " / "
+                + PhotonNetwork.CurrentRoom.MaxPlayers;
+
+            // This is because we dont need to INSTANTIATE this list again when leave room and jointo another
+            if(playerListGameObjects == null)
             {
-                Debug.Log(gameModeName.ToString());
+                playerListGameObjects = new Dictionary<int, GameObject>();
+            }
+            
+
+            foreach (Player player in PhotonNetwork.PlayerList)
+            {
+                GameObject playerListGameObject = Instantiate(PlayerListPrefab);
+                playerListGameObject.transform.SetParent(PlayerListContent.transform);
+                playerListGameObject.transform.localScale = Vector3.one;
+                playerListGameObject.GetComponent<PlayerListEntryInitializer>().Initialize(player.ActorNumber, player.NickName);
+
+                playerListGameObjects.Add(player.ActorNumber, playerListGameObject);
             }
         }
     }
@@ -186,9 +215,56 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        RoomInfoText.text = "Room name: "
+               + PhotonNetwork.CurrentRoom.Name
+               + " "
+               + " Players/Max.Players: "
+               + PhotonNetwork.CurrentRoom.PlayerCount
+               + " / "
+               + PhotonNetwork.CurrentRoom.MaxPlayers;
+
+        GameObject playerListGameObject = Instantiate(PlayerListPrefab);
+        playerListGameObject.transform.SetParent(PlayerListContent.transform);
+        playerListGameObject.transform.localScale = Vector3.one;
+        playerListGameObject.GetComponent<PlayerListEntryInitializer>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
+
+        playerListGameObjects.Add(newPlayer.ActorNumber, playerListGameObject);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        RoomInfoText.text = "Room name: "
+               + PhotonNetwork.CurrentRoom.Name
+               + " "
+               + " Players/Max.Players: "
+               + PhotonNetwork.CurrentRoom.PlayerCount
+               + " / "
+               + PhotonNetwork.CurrentRoom.MaxPlayers;
+
+        // Destroying game object from player who left in playerListGameObject
+        Destroy(playerListGameObjects[otherPlayer.ActorNumber].gameObject);
+        playerListGameObjects.Remove(otherPlayer.ActorNumber);
+    }
+
+    public override void OnLeftRoom()
+    {
+        ActivatePanel(GameOptionsUIPanel.name);
+
+        // Cleaning all the list because you left the room
+        foreach (GameObject playerListGameObject in playerListGameObjects.Values)
+        {
+            Destroy(playerListGameObject);
+        }
+        playerListGameObjects.Clear();
+        playerListGameObjects = null;
+    }
+
     #endregion
 
     #region Public Methods
+
     public void ActivatePanel(string panelNameToBeActivated)
     {
         LoginUIPanel.SetActive(LoginUIPanel.name.Equals(panelNameToBeActivated));
@@ -204,5 +280,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         GameMode = _gameMode;
     }
+
     #endregion
 }
