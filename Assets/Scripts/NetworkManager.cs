@@ -75,8 +75,91 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public void OnCreateRoomButtonClicked()
     {
-
         ActivatePanel(CreatingRoomInfoUIPanel.name);
+        if (GameMode != null)
+        {
+            string roomName = RoomNameInputField.text;
+
+            if (string.IsNullOrEmpty(roomName))
+            {
+                roomName = "Room " + Random.Range(1000, 10000);
+            }
+
+            RoomOptions roomOptions = new RoomOptions();
+            roomOptions.MaxPlayers = 3;
+
+            string[] roomPropsInLobby = { "gm" }; //gm = game mode
+
+            // two game modes
+            // 1. racing = "rc"
+            // 2. death race = "dr"
+
+            ExitGames.Client.Photon.Hashtable customRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "gm", GameMode } };
+
+            roomOptions.CustomRoomPropertiesForLobby = roomPropsInLobby;
+            roomOptions.CustomRoomProperties = customRoomProperties;
+            PhotonNetwork.CreateRoom(roomName, roomOptions);
+        }
+    }
+
+    public void OnJoinRandomRommButtonClicked(string _gameMode)
+    {
+        GameMode = _gameMode;
+
+        ExitGames.Client.Photon.Hashtable expectedCustomRoomProperties = new ExitGames.Client.Photon.Hashtable() { { "gm", _gameMode } };
+        PhotonNetwork.JoinRandomRoom(expectedCustomRoomProperties, 0);
+    }
+
+    public void OnBackButtonClicked()
+    {
+        ActivatePanel(GameOptionsUIPanel.name);
+    }
+
+    #endregion
+
+    #region Photon Callbacks
+
+    public override void OnConnected()
+    {
+        Debug.Log("Connected to internet");
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        ActivatePanel(GameOptionsUIPanel.name);
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is connected to Photon");
+    }
+
+    // Called when this client created a room and entered it. OnJoinedRoom() will be called as well
+    public override void OnCreatedRoom()
+    {
+        Debug.Log(PhotonNetwork.CurrentRoom.Name + " is created");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName 
+            + " joined to " 
+            + PhotonNetwork.CurrentRoom.Name 
+            + " / Player count: "
+            + PhotonNetwork.CurrentRoom.PlayerCount);
+
+        ActivatePanel(InsideRoomUIPanel.name);
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
+        {
+            object gameModeName;
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gm", out gameModeName))
+            {
+                Debug.Log(gameModeName.ToString());
+            }
+        }
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log(message);
+
+        // if there is no room, create one
         if (GameMode != null)
         {
             string roomName = RoomNameInputField.text;
@@ -105,40 +188,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     #endregion
 
-    #region Photon Callbacks
-
-    public override void OnConnected()
-    {
-        Debug.Log("Connected to internet");
-    }
-
-    public override void OnConnectedToMaster()
-    {
-        ActivatePanel(GameOptionsUIPanel.name);
-        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " is connected to Photon");
-    }
-
-    public override void OnCreatedRoom()
-    {
-        Debug.Log(PhotonNetwork.CurrentRoom.Name + " is created");
-    }
-
-    public override void OnJoinedRoom()
-    {
-        Debug.Log(PhotonNetwork.LocalPlayer.NickName + " joined to " + PhotonNetwork.CurrentRoom.Name);
-
-        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
-        {
-            object gameModeName;
-            if(PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue("gm", out gameModeName))
-            {
-                Debug.Log(gameModeName.ToString());
-            }
-        }
-    }
-
-    #endregion
-
     #region Public Methods
     public void ActivatePanel(string panelNameToBeActivated)
     {
@@ -148,6 +197,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         CreateRoomUIPanel.SetActive(CreateRoomUIPanel.name.Equals(panelNameToBeActivated));
         GameOptionsUIPanel.SetActive(GameOptionsUIPanel.name.Equals(panelNameToBeActivated));
         JoinRandomRoomUIPanel.SetActive(JoinRandomRoomUIPanel.name.Equals(panelNameToBeActivated));
+        InsideRoomUIPanel.SetActive(InsideRoomUIPanel.name.Equals(panelNameToBeActivated));
     }
 
     public void SetGameMode(string _gameMode)
