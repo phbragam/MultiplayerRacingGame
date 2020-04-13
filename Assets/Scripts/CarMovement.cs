@@ -9,37 +9,43 @@ public class CarMovement : MonoBehaviour
     public Vector3 thrustForce = new Vector3(0f, 0f, 45f);
     public Vector3 rotationTorque = new Vector3(0f, 8f, 0f);
 
+    public bool ControlsEnabled;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        ControlsEnabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // moving forward
-        if (Input.GetKey("w"))
+        if (ControlsEnabled)
         {
-            rb.AddRelativeForce(thrustForce);
-        }
+            // moving forward
+            if (Input.GetKey("w"))
+            {
+                rb.AddRelativeForce(thrustForce);
+            }
 
-        // moving backward
-        if (Input.GetKey("s"))
-        {
-            rb.AddRelativeForce(-thrustForce);
-        }
+            // moving backward
+            if (Input.GetKey("s"))
+            {
+                rb.AddRelativeForce(-thrustForce);
+            }
 
-        // moving left
-        if (Input.GetKey("a"))
-        {
-            rb.AddRelativeTorque(-rotationTorque);
-        }
+            // moving left
+            if (Input.GetKey("a"))
+            {
+                rb.AddRelativeTorque(-rotationTorque);
+            }
 
-        // moving right
-        if (Input.GetKey("d"))
-        {
-            rb.AddRelativeTorque(rotationTorque);
+            // moving right
+            if (Input.GetKey("d"))
+            {
+                rb.AddRelativeTorque(rotationTorque);
+            }
         }
     }
 }
