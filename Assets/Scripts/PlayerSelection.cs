@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerSelection : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class PlayerSelection : MonoBehaviour
             SelectablePlayer.SetActive(false);
         }
         SelectablePlayers[x].SetActive(true);
+
+        // Setting up player selection property
+        ExitGames.Client.Photon.Hashtable playerSelectionProp = new ExitGames.Client.Photon.Hashtable() { {MultiplayerRacingGame.PLAYER_SELECTION_NUMBER, PlayerSelectionNumber } };
+        PhotonNetwork.LocalPlayer.SetCustomProperties(playerSelectionProp);
     }
 
     public void NextPlayer()
