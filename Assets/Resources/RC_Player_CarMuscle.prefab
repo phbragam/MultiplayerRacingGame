@@ -398,6 +398,8 @@ GameObject:
   - component: {fileID: 586489019113817725}
   - component: {fileID: 6845365739958815403}
   - component: {fileID: 811004776}
+  - component: {fileID: -7094725131304850954}
+  - component: {fileID: 4443910348216757552}
   m_Layer: 0
   m_Name: RC_Player_CarMuscle
   m_TagString: Untagged
@@ -465,10 +467,10 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
-  Synchronization: 0
+  Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 0}
+  - {fileID: 4443910348216757552}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -486,6 +488,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrustForce: {x: 0, y: 0, z: 45}
   rotationTorque: {x: 0, y: 8, z: 0}
+--- !u!114 &-7094725131304850954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7547419182675889572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a2573624f958a643a849c4165c72568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerCamera: {fileID: 3328802457650535388}
+--- !u!114 &4443910348216757552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7547419182675889572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
 --- !u!1 &8553288829510907189
 GameObject:
   m_ObjectHideFlags: 0
