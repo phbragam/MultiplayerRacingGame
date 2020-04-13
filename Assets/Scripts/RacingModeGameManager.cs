@@ -11,6 +11,8 @@ public class RacingModeGameManager : MonoBehaviour
 
     public Text TimeUIText;
 
+    public List<GameObject> LapTriggers = new List<GameObject>();
+    
     // Singleton implementation
     public static RacingModeGameManager instance = null;
 

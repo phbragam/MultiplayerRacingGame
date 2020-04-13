@@ -252,6 +252,13 @@ MonoBehaviour:
   - {fileID: 520539330}
   - {fileID: 969788840}
   TimeUIText: {fileID: 1314609381}
+  LapTriggers:
+  - {fileID: 470316408}
+  - {fileID: 1274624178}
+  - {fileID: 126533152}
+  - {fileID: 1291240283}
+  - {fileID: 891449155}
+  - {fileID: 518893667}
 --- !u!4 &33157287
 Transform:
   m_ObjectHideFlags: 0

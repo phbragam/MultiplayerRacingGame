@@ -11,7 +11,8 @@ public class TimeCountdownManager : MonoBehaviourPunCallbacks
 
     private void Awake()
     {
-        // RacingModeGameManager.instance represents an instance created in scene, in this case TimeUIText from the Canvas in scene that is attached to RacingModeGameManager
+        // RacingModeGameManager.instance is instance of RacingModeGameManeger (see RacingModeGameManeger script)
+        // We are accessing another game object without dragging and dropping the game object (script component) thanks to singleton
         TimeUIText = RacingModeGameManager.instance.TimeUIText;
     }
 

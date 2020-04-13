@@ -13,12 +13,14 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         {
             // enable car movement script and camera
             GetComponent<CarMovement>().enabled = true;
+            GetComponent<LapController>().enabled = true;
             PlayerCamera.enabled = true;
         }
         else
         {
             // player is remote. Disable carMovement script and camera
             GetComponent<CarMovement>().enabled = false;
+            GetComponent<LapController>().enabled = false;
             PlayerCamera.enabled = false;
         }
     }

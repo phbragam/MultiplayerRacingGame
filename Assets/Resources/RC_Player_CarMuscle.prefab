@@ -401,6 +401,7 @@ GameObject:
   - component: {fileID: -7094725131304850954}
   - component: {fileID: 4443910348216757552}
   - component: {fileID: -4964298236175049676}
+  - component: {fileID: -3425984063742095010}
   m_Layer: 0
   m_Name: RC_Player_CarMuscle
   m_TagString: Untagged
@@ -489,6 +490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrustForce: {x: 0, y: 0, z: 45}
   rotationTorque: {x: 0, y: 8, z: 0}
+  ControlsEnabled: 0
 --- !u!114 &-7094725131304850954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,6 +529,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f917b40cacbe62c45911369773391870, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-3425984063742095010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7547419182675889572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14dbae6ffa7f4904787a28b30483a0d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8553288829510907189
