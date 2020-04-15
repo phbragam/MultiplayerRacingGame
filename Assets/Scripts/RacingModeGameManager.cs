@@ -10,6 +10,7 @@ public class RacingModeGameManager : MonoBehaviour
     public Transform[] InstantiatePositions;
 
     public Text TimeUIText;
+    public GameObject[] FinishOrderUIGameObjects;
 
     public List<GameObject> LapTriggers = new List<GameObject>();
     
@@ -51,6 +52,11 @@ public class RacingModeGameManager : MonoBehaviour
 
                 PhotonNetwork.Instantiate(PlayerPrefabs[(int)playerSelectionNumber].name, instantiatePosition, Quaternion.identity);
             }
+        }
+
+        foreach (GameObject gm in FinishOrderUIGameObjects)
+        {
+            gm.SetActive(false);
         }
     }
 

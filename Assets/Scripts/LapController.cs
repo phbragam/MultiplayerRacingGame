@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using UnityEngine.UI;
 
 public class LapController : MonoBehaviourPun
 {
@@ -26,10 +27,13 @@ public class LapController : MonoBehaviourPun
         }
     }
 
+    // This function is called when the object becomes enabled and active
     private void OnEnable()
     {
+        // Register a nethod that is called whenever an event is received
         PhotonNetwork.NetworkingClient.EventReceived += OnEvent;
     }
+
 
     private void OnDisable()
     {
@@ -49,7 +53,23 @@ public class LapController : MonoBehaviourPun
 
             finishOrder = (int)data[1];
 
+            int viewID = (int)data[2];
+
             Debug.Log(nicknameOfFinishedPlayer + " " + finishOrder);
+
+            GameObject orderUITextGameObject = RacingModeGameManager.instance.FinishOrderUIGameObjects[finishOrder - 1];
+            orderUITextGameObject.SetActive(true);
+
+            if (viewID == photonView.ViewID)
+            {
+                // the player is actually me
+                orderUITextGameObject.GetComponent<Text>().text = finishOrder + ". " + nicknameOfFinishedPlayer + " (YOU)";
+                orderUITextGameObject.GetComponent<Text>().color = Color.red;
+            }
+            else
+            {
+                orderUITextGameObject.GetComponent<Text>().text = finishOrder + ". " + nicknameOfFinishedPlayer;
+            }
         }
     }
 
@@ -85,9 +105,9 @@ public class LapController : MonoBehaviourPun
         finishOrder += 1;
 
         string nickname = photonView.Owner.NickName;
-
+        int viewID = photonView.ViewID;
         // Event data
-        object[] data = new object[] { nickname, finishOrder };
+        object[] data = new object[] { nickname, finishOrder, viewID };
 
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions
         {
