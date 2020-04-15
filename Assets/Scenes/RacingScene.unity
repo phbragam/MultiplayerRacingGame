@@ -718,6 +718,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TerrainModel
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 5cf9b99cd6979c846b8b123c1ff780c3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cf9b99cd6979c846b8b123c1ff780c3, type: 3}
 --- !u!4 &328722031 stripped
@@ -744,7 +749,7 @@ MeshCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 0
-  m_CookingOptions: 14
+  m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: 5cf9b99cd6979c846b8b123c1ff780c3, type: 3}
 --- !u!1 &400514107
 GameObject:
