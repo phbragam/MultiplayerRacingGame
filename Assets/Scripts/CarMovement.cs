@@ -16,6 +16,8 @@ public class CarMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         ControlsEnabled = false;
+        //obs.: the order in spector matters, we need to put CarMovement over PlayerSetup (in car's prefabs), so, the Start method from CarMovement will be called first
+        Debug.Log("Controls disabled");
     }
 
     // Update is called once per frame

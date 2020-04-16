@@ -12,21 +12,42 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        if (photonView.IsMine)
-        {
-            // enable car movement script and camera
-            GetComponent<CarMovement>().enabled = true;
-            GetComponent<LapController>().enabled = true;
-            PlayerCamera.enabled = true;
-        }
-        else
-        {
-            // player is remote. Disable carMovement script and camera
-            GetComponent<CarMovement>().enabled = false;
-            GetComponent<LapController>().enabled = false;
-            PlayerCamera.enabled = false;
-        }
 
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsValue("rc"))
+        {
+            if (photonView.IsMine)
+            {
+                // enable car movement script and camera
+                GetComponent<CarMovement>().enabled = true;
+                GetComponent<LapController>().enabled = true;
+                PlayerCamera.enabled = true;
+            }
+            else
+            {
+                // player is remote. Disable carMovement script and camera
+                GetComponent<CarMovement>().enabled = false;
+                GetComponent<LapController>().enabled = false;
+                PlayerCamera.enabled = false;
+            }
+        }
+        else if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsValue("dr"))
+        {
+            if (photonView.IsMine)
+            {
+                // enable car movement script and camera
+                GetComponent<CarMovement>().enabled = true;
+                GetComponent<CarMovement>().ControlsEnabled = true;
+                //obs.: the order in spector matters, we need to put CarMovement over PlayerSetup (in car's prefabs), so, the Start method from CarMovement will be called first
+                Debug.Log("Controls enabled");
+                PlayerCamera.enabled = true;
+            }
+            else
+            {
+                // player is remote. Disable carMovement script and camera
+                GetComponent<CarMovement>().enabled = false;
+                PlayerCamera.enabled = false;
+            }
+        }
         SetPlayerUI();
     }
 
