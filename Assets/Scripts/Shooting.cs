@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Shooting : MonoBehaviour
+public class Shooting : MonoBehaviourPun
 {
     public GameObject BulletPrefab;
     public Transform firePosition;
@@ -35,12 +36,17 @@ public class Shooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         if (Input.GetKey("space"))
         {
             if (fireTimer > fireRate)
             {
-                Fire();
-
+                // Fire
+                photonView.RPC("Fire", RpcTarget.All, firePosition.position);
+                    
                 fireTimer = 0.0f;
             }
             
@@ -52,7 +58,8 @@ public class Shooting : MonoBehaviour
         }
     }
 
-    public void Fire()
+    [PunRPC]
+    public void Fire(Vector3 _firePosition)
     {
         if (useLaser)
         {
@@ -69,7 +76,7 @@ public class Shooting : MonoBehaviour
                 lineRenderer.startWidth = 0.3f;
                 lineRenderer.endWidth = 0.1f;
 
-                lineRenderer.SetPosition(0, firePosition.position);
+                lineRenderer.SetPosition(0, _firePosition);
                 lineRenderer.SetPosition(1, _hit.point);
 
                 StopAllCoroutines();
@@ -79,7 +86,7 @@ public class Shooting : MonoBehaviour
         else
         {
             Ray ray = PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-            GameObject bulletGameObject = Instantiate(BulletPrefab, firePosition.position, Quaternion.identity);
+            GameObject bulletGameObject = Instantiate(BulletPrefab, _firePosition, Quaternion.identity);
             bulletGameObject.GetComponent<BulletScript>().Initialize(ray.direction, DeathRacePlayerProperties.bulletSpeed, DeathRacePlayerProperties.damage);
         }
     }
