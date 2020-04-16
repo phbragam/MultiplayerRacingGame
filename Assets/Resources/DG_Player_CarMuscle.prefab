@@ -557,6 +557,7 @@ GameObject:
   - component: {fileID: 3890204497447968817}
   - component: {fileID: -3991825075864982330}
   - component: {fileID: 8174165153194091551}
+  - component: {fileID: 580611492}
   m_Layer: 0
   m_Name: DG_Player_CarMuscle
   m_TagString: Player
@@ -662,7 +663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thrustForce: {x: 0, y: 0, z: 45}
   rotationTorque: {x: 0, y: 8, z: 0}
-  ControlsEnabled: 0
+  ControlsEnabled: 1
 --- !u!114 &8174165153194091551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,6 +678,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 1288364109427902234}
   PlayerNameText: {fileID: 7201343586434115789}
+--- !u!114 &580611492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4689008684380552187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c547c48e84aa8d04d9346561dd8bf88d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BulletPrefab: {fileID: 8199238421558078776, guid: 35d44458c1899014786bf478fba74a09,
+    type: 3}
+  firePosition: {fileID: 465340505}
+  PlayerCamera: {fileID: 1288364109427902234}
+  DeathRacePlayerProperties: {fileID: 11400000, guid: 5717f738f6236cf42a39a1bcadfc6042,
+    type: 2}
 --- !u!1 &6455898760384394329
 GameObject:
   m_ObjectHideFlags: 0
