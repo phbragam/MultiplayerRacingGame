@@ -614,7 +614,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &223612672
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6024,6 +6024,18 @@ MonoBehaviour:
   RacingBackground: {fileID: 21300000, guid: df5dd41c5770c434ca5c0f00460b1e12, type: 3}
   DeathRaceBackground: {fileID: 21300000, guid: ffa5b662caf5e0d4abe760fcb445f479,
     type: 3}
+  PlayerSelectionUIGameObjects:
+  - {fileID: 1833322808}
+  - {fileID: 1736180112}
+  - {fileID: 299006209}
+  DeathRacePlayers:
+  - {fileID: 11400000, guid: f8742da3f6338c544815f531ca45f558, type: 2}
+  - {fileID: 11400000, guid: 5717f738f6236cf42a39a1bcadfc6042, type: 2}
+  - {fileID: 11400000, guid: 0ec1bc7c835ca01458f76533018ffffd, type: 2}
+  RacingPlayers:
+  - {fileID: 11400000, guid: 6e48f468814b7e941a788db39805c927, type: 2}
+  - {fileID: 11400000, guid: 1e7608b9f1b2c084184aac78d3cfa920, type: 2}
+  - {fileID: 11400000, guid: 661b5d81884ca514590f440bbddcb29a, type: 2}
   JoinRandomRoomUIPanel: {fileID: 1438516555}
 --- !u!4 &1617709034
 Transform:
@@ -6462,7 +6474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1694358757
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6688,7 +6700,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1805289357
 RectTransform:
   m_ObjectHideFlags: 0

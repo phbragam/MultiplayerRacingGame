@@ -36,6 +36,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     public Image PanelBackground;
     public Sprite RacingBackground;
     public Sprite DeathRaceBackground;
+    public GameObject[] PlayerSelectionUIGameObjects;
+    public DeathRacePlayer[] DeathRacePlayers;
+    public RacingPlayer[] RacingPlayers;
 
     [Header("Join Random Room Panel")]
     public GameObject JoinRandomRoomUIPanel;
@@ -172,9 +175,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log(PhotonNetwork.LocalPlayer.NickName 
-            + " joined to " 
-            + PhotonNetwork.CurrentRoom.Name 
+        Debug.Log(PhotonNetwork.LocalPlayer.NickName
+            + " joined to "
+            + PhotonNetwork.CurrentRoom.Name
             + " / Player count: "
             + PhotonNetwork.CurrentRoom.PlayerCount);
 
@@ -182,7 +185,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey("gm"))
         {
-            RoomInfoText.text = "Room name: " 
+            RoomInfoText.text = "Room name: "
                 + PhotonNetwork.CurrentRoom.Name
                 + " "
                 + " Players/Max.Players: "
@@ -195,20 +198,39 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 // Racing game mode
                 GameModeText.text = "LET'S RACE!";
                 PanelBackground.sprite = RacingBackground;
+
+                for (int i = 0; i < PlayerSelectionUIGameObjects.Length; i++)
+                {
+                    PlayerSelectionUIGameObjects[i].transform.Find("PlayerName").GetComponent<Text>().text = RacingPlayers[i].playerName;
+                    PlayerSelectionUIGameObjects[i].GetComponent<Image>().sprite = RacingPlayers[i].playerSprite;
+                    PlayerSelectionUIGameObjects[i].transform.Find("PlayerProperty").GetComponent<Text>().text = "";
+                }
             }
             else if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsValue("dr"))
             {
                 // Death race game mode
                 GameModeText.text = "DEATH RACE!";
                 PanelBackground.sprite = DeathRaceBackground;
+
+                for (int i = 0; i < PlayerSelectionUIGameObjects.Length; i++)
+                {
+                    PlayerSelectionUIGameObjects[i].transform.Find("PlayerName").GetComponent<Text>().text = DeathRacePlayers[i].playerName;
+                    PlayerSelectionUIGameObjects[i].GetComponent<Image>().sprite = DeathRacePlayers[i].playerSprite;
+                    PlayerSelectionUIGameObjects[i].transform.Find("PlayerProperty").GetComponent<Text>().text = DeathRacePlayers[i].weaponName
+                        + ": "
+                        + "Damage: "
+                        + DeathRacePlayers[i].damage
+                        + " FireRate: "
+                        + DeathRacePlayers[i].fireRate;
+                }
             }
 
             // This is because we dont need to INSTANTIATE this list again when leave room and join to another room
-            if(playerListGameObjects == null)
+            if (playerListGameObjects == null)
             {
                 playerListGameObjects = new Dictionary<int, GameObject>();
             }
-            
+
 
             foreach (Player player in PhotonNetwork.PlayerList)
             {
@@ -331,7 +353,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        if(PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
+        if (PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
         {
             StartGameButton.SetActive(CheckPlayersReady());
         }
@@ -367,12 +389,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         {
             return false;
         }
-        foreach(Player player in PhotonNetwork.PlayerList)
+        foreach (Player player in PhotonNetwork.PlayerList)
         {
             object isPlayerReady;
-            if(player.CustomProperties.TryGetValue(MultiplayerRacingGame.PLAYER_READY, out isPlayerReady))
+            if (player.CustomProperties.TryGetValue(MultiplayerRacingGame.PLAYER_READY, out isPlayerReady))
             {
-                if(!(bool)isPlayerReady)
+                if (!(bool)isPlayerReady)
                 {
                     return false;
                 }
