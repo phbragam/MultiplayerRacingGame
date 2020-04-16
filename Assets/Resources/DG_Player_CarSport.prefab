@@ -241,6 +241,7 @@ GameObject:
   - component: {fileID: 7156222828167090231}
   - component: {fileID: 1134819047305539806}
   - component: {fileID: 5461842657422972163}
+  - component: {fileID: 1372954007}
   m_Layer: 0
   m_Name: DG_Player_CarSport
   m_TagString: Player
@@ -361,6 +362,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerCamera: {fileID: 8985360257163249780}
   PlayerNameText: {fileID: 8612707795153771747}
+--- !u!114 &1372954007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3189090968767411349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c547c48e84aa8d04d9346561dd8bf88d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BulletPrefab: {fileID: 0}
+  firePosition: {fileID: 1640175523}
+  PlayerCamera: {fileID: 8985360257163249780}
+  DeathRacePlayerProperties: {fileID: 11400000, guid: 0ec1bc7c835ca01458f76533018ffffd,
+    type: 2}
+  lineRenderer: {fileID: 1640175522}
 --- !u!1 &3537330560672789734
 GameObject:
   m_ObjectHideFlags: 0
