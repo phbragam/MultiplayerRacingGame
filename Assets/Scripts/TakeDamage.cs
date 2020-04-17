@@ -95,7 +95,6 @@ public class TakeDamage : MonoBehaviourPun
         GetComponent<CarMovement>().enabled = true;
         GetComponent<Shooting>().enabled = true;
 
-        GetComponent<Shooting>().Se
 
         int randomPoint = Random.Range(-20, 20);
 
