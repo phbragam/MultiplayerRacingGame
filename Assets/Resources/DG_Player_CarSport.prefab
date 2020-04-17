@@ -395,6 +395,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHealth: 100
   healthBar: {fileID: 4743990239124289505}
+  PlayerGraphics: {fileID: 1794880438820313497}
+  PlayerUI: {fileID: 7731054696926973544}
+  PlayerWeaponHolder: {fileID: 1452987648173347161}
+  DeathPanelUIPrefab: {fileID: 3593783272886976281, guid: 9bfb0f188d017884ca4192b2ecb55586,
+    type: 3}
 --- !u!1 &3537330560672789734
 GameObject:
   m_ObjectHideFlags: 0
