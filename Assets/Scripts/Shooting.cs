@@ -79,6 +79,17 @@ public class Shooting : MonoBehaviourPun
                 lineRenderer.SetPosition(0, _firePosition);
                 lineRenderer.SetPosition(1, _hit.point);
 
+                if (_hit.collider.gameObject.CompareTag("Player"))
+                {
+                    // This if() guarantees that only DoDamage from the targeted object will be called
+                    // Without this, DoDamage would be called in each targeted player in the scene multiplying the damage
+                    // Remember that the targeted object, with PhotonView component, exists for all players (differents game windows), but there is only one PhotonView that "is mine"
+                    if (_hit.collider.gameObject.GetComponent<PhotonView>().IsMine)
+                    {
+                        _hit.collider.gameObject.GetComponent<PhotonView>().RPC("DoDamage", RpcTarget.AllBuffered, DeathRacePlayerProperties.damage);
+                    }
+                }
+
                 StopAllCoroutines();
                 StartCoroutine(DisableLaserAfterSecs(0.3f));
             }
